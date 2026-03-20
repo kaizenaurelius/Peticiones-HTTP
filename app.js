@@ -7,3 +7,12 @@ function sendHTTPRequest(method, url, data) {
         },
     }).then((response) => {return response.json()});
 };
+
+async function getPosts() {
+
+    const data = await sendHTTPRequest("GET", 'https://jsonplaceholder.typicode.com/posts');
+    const listOfPosts =data;
+
+    console.log(listOfPosts)
+
+}
