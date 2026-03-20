@@ -1,11 +1,18 @@
+
+const fetchButton = document.querySelector('#available-posts button');
+
 function sendHTTPRequest(method, url, data) {
-    return fetch(url, {
+    const options = {
         method: method,
-        body: JSON.stringify(data),
         headers: {
             "Content-Type": "application/json",
         },
-    }).then((response) => {return response.json()});
+    }
+
+    if (data && method.toUpperCase() !== 'GET'){
+        options.body = JSON.stringify(data);
+    }
+    return fetch(url, options).then((response) => response.json());
 };
 
 
@@ -31,11 +38,29 @@ function createPostsElements(post){ //elemento post es la respuesta del get, es 
     return postContainer;
 
 }
-async function getPosts() {
+async function renderPosts() {
 
-    const data = await sendHTTPRequest("GET", 'https://jsonplaceholder.typicode.com/posts');
-    const listOfPosts =data;
+    const listOfHTMLElements = document.getElementById("posts-container");
 
-    console.log(listOfPosts)
+    listOfHTMLElements.innerHTML = '<p>Cargando posts...</p>'; //mensaje de carga y al mismo tiempo, borra anterior lista
+
+    try {
+
+        const listOfPosts = await sendHTTPRequest("GET", 'https://jsonplaceholder.typicode.com/posts')
+
+        listOfHTMLElements.innerHTML = '';  //Vaciando mensaje de carga
+
+        for (const post of listOfPosts) {
+
+            const postHTMLElement = createPostsElements(post)
+            listOfHTMLElements.append(postHTMLElement);
+        }
+    }catch (error) {
+        console.error("Falla al renderizar", error);
+        listOfHTMLElements.innerHTML = '<p style="color: red;">Hubo un error al cargar.</p>';
+    }
 
 }
+
+
+fetchButton.addEventListener('click', renderPosts);
