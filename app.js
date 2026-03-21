@@ -64,17 +64,10 @@ async function renderPosts() {
 
 }
 
-async function postDataToAPI(event) {
-    event.preventDefault();
-
-    const enteredTitle = document.getElementById('title');
-    const enteredContent = document.getElementById('content');
-    console.log(enteredTitle.value);
-    console.log(enteredContent.value);
-
+async function postDataToAPI(title, content) {
     const postData = {
-        title: enteredTitle.value,
-        body: enteredContent.value,
+        title: title,
+        body: content,
         userId: 1
     }
 
@@ -95,4 +88,17 @@ async function postDataToAPI(event) {
 
 
 fetchButton.addEventListener('click', renderPosts);
-postButton.addEventListener('click', postDataToAPI)
+formElement.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const enteredTitle = document.getElementById('title').value;
+    const enteredContent = document.getElementById('content').value;
+    console.log(enteredTitle);
+    console.log(enteredContent);
+
+
+    postDataToAPI(enteredTitle, enteredContent);
+
+    event.target.reset()
+})
+
