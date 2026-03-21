@@ -34,6 +34,14 @@ function createPostsElements(post){ //elemento post es la respuesta del get, es 
 
     const postDeleteButton = document.createElement('button')
     postDeleteButton.textContent = "DELETE Post"
+    postDeleteButton.addEventListener('click', async () => {
+        
+        const deletedPost = await sendHTTPRequest("DELETE", `https://jsonplaceholder.typicode.com/posts/${post.id}`)
+
+        console.log(postContainer)
+        alert(`Post con id ${post.id} eliminado`)
+        postContainer.remove();
+    })
 
     postContainer.append(postTitle, postBody, postDeleteButton);
 
