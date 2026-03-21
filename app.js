@@ -1,5 +1,7 @@
 
 const fetchButton = document.querySelector('#available-posts button');
+const formElement = document.querySelector('#new-post form');
+const postButton = document.querySelector('#new-post button')
 
 function sendHTTPRequest(method, url, data) {
     const options = {
@@ -62,5 +64,14 @@ async function renderPosts() {
 
 }
 
+async function postDataToAPI(event) {
+    event.preventDefault();
+
+    const enteredTitle = document.getElementById('title')
+    console.log(enteredTitle.value)
+}
+    
+
 
 fetchButton.addEventListener('click', renderPosts);
+postButton.addEventListener('click', postDataToAPI)
