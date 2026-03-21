@@ -67,8 +67,29 @@ async function renderPosts() {
 async function postDataToAPI(event) {
     event.preventDefault();
 
-    const enteredTitle = document.getElementById('title')
-    console.log(enteredTitle.value)
+    const enteredTitle = document.getElementById('title');
+    const enteredContent = document.getElementById('content');
+    console.log(enteredTitle.value);
+    console.log(enteredContent.value);
+
+    const postData = {
+        title: enteredTitle.value,
+        body: enteredContent.value,
+        userId: 1
+    }
+
+
+    try {
+        const responseData = await sendHTTPRequest("POST", 'https://jsonplaceholder.typicode.com/posts', postData);
+
+        console.log('Enviado al servidor', responseData)
+        alert('Post creado con exito');
+    }catch (error){
+        console.error('Hubo un error', error);
+        alert('Hubo un error')
+    }
+
+
 }
     
 
