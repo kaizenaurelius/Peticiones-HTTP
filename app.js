@@ -2,6 +2,7 @@
 const fetchButton = document.querySelector('#available-posts button');
 const formElement = document.querySelector('#new-post form');
 const postButton = document.querySelector('#new-post button')
+const postsContainer = document.getElementById('posts-container'); //para selecionar el contenedor y agregarle un escuchador
 
 function sendHTTPRequest(method, url, data) {
     const options = {
@@ -17,6 +18,32 @@ function sendHTTPRequest(method, url, data) {
     return fetch(url, options).then((response) => response.json());
 };
 
+postsContainer.addEventListener('click', async (event) => {
+    if (event.target.tagName === 'BUTTON') {// aqui solamente ejecutare si se dio click en un boton, es decir, el de eliminar post.
+
+
+        const postSingleElement = event.target.closest('article')// selecciono el article del button cliquado.
+        const postId = postSingleElement.id; // obtengo el id del post a eliminar. en el renderizado, cada aricle tiene un id igual al id del post.
+
+        try {
+
+            event.target.disabled = true; //desactivo buton mientras se hace el delete.
+            event.target.textContent = 'Deleting...'
+
+            const deletedPost = await sendHTTPRequest("DELETE", `https://jsonplaceholder.typicode.com/posts/${postId}`);
+
+            console.log(`Post ${postId} eliminado del servidor con éxito.`);
+
+            postSingleElement.remove();
+
+        }catch(error) {
+            console.error('Error al intentar borrar el post con id ' + post.id);
+            alert("No se pudo borrar el post. Revisa tu conexión a internet.");
+
+            event.target.disabled = false;
+            event.target.textContent = "DELETE Post";
+        }
+    }});    
 
 // Funcion que crea el esqueleto del post y se ejecutara en el for de la funcion de renderizado
 
@@ -34,7 +61,7 @@ function createPostsElements(post){ //elemento post es la respuesta del get, es 
 
     const postDeleteButton = document.createElement('button')
     postDeleteButton.textContent = "DELETE Post"
-    postDeleteButton.addEventListener('click', async () => {
+    /*postDeleteButton.addEventListener('click', async () => {
 
         try {
             const deletedPost = await sendHTTPRequest("DELETE", `https://jsonplaceholder.typicode.com/posts/${post.id}`)
@@ -48,7 +75,7 @@ function createPostsElements(post){ //elemento post es la respuesta del get, es 
         }
 
 
-    })
+    })*/
 
     postContainer.append(postTitle, postBody, postDeleteButton);
 
